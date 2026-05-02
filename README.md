@@ -1,3 +1,3 @@
-# Chat Server
+# Riverrun
 C++ Chating Server
-> Version 0.1.0-alpha
+> Version 1.0.0-beta
