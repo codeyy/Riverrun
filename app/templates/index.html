@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Riverrun Client</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', path='favicon.ico') }}">
+  </head>
+  <body>
+    <main class="shell">
+      <section class="sidebar alpha" aria-label="Connection panel">
+        <div class="brand">
+          <span class="brand-mark">RVRN</span>
+          <div>
+            <h1>Riverrun Client</h1>
+            <p>High-performance chat client connected to Riverrun</p>
+          </div>
+        </div>
+
+        <form id="connect-form" class="connect-form">
+          <label>
+            Name
+            <input id="username" name="username" maxlength="32" autocomplete="nickname" placeholder="Your name" required autocomplete="off">
+          </label>
+          <label>
+            Server
+            <input id="host" name="host" value="{{ default_host }}" required>
+          </label>
+          <label>
+            Port
+            <input id="port" name="port" type="number" min="1" max="65535" value="{{ default_port }}" required>
+          </label>
+          <button id="connect-button" type="button">Connect</button>
+          <button id="disconnect-button" type="button" disabled>Disconnect</button>
+        </form>
+
+        <div class="status">
+          <span id="status-dot" class="status-dot"></span>
+          <span id="status-text">Disconnected</span>
+        </div>
+      </section>
+
+      <section class="chat-panel beta" aria-label="Chat">
+        <header class="chat-header">
+          <div>
+            <p class="eyebrow">Live Room</p>
+            <h2 id="room-title">Waiting for connection</h2>
+          </div>
+        </header>
+        
+        <div id="messages" class="messages scroll-box" aria-live="polite"></div>
+
+        <form id="message-form" class="message-form">
+          <input id="recipient-input" class="recipient-input" placeholder="DM user (optional)" autocomplete="off" disabled>
+          <input id="message-input" placeholder="Type a message..." autocomplete="off" focus disabled>
+          <button id="send-button" type="submit" disabled>Send</button>
+        </form>
+      </section>
+    </main>
+
+    <script src="{{ url_for('static', path='app.js') }}"></script>
+  </body>
+</html>
