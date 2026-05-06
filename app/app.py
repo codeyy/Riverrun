@@ -14,6 +14,9 @@ from starlette.requests import Request
 DEFAULT_CHAT_HOST = os.environ.get("CHAT_SERVER_HOST", "127.0.0.1")
 DEFAULT_CHAT_PORT = int(os.environ.get("CHAT_SERVER_PORT", "8080"))
 DELIM = "<MESSAGE_DELIMITER>"
+REVERRUN_SERVER_HOST = "127.0.0.1"
+REVERRUN_SERVER_PORT = 8080 
+
 
 app = FastAPI(title="Riverrun Web Client")
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -138,15 +141,13 @@ async def websocket_chat(websocket: WebSocket):
             return
 
         username = (first.get("username") or "Guest").strip()[:32]
-        host = (first.get("host") or DEFAULT_CHAT_HOST).strip()
-        port = int(first.get("port") or DEFAULT_CHAT_PORT)
-
-        chat_client = RiverrunClient(username=username, host=host, port=port)
-        await ws_send(websocket, "system", f"Connecting to {host}:{port}...")
+        
+        chat_client = RiverrunClient(username=username, host=REVERRUN_SERVER_HOST, port=REVERRUN_SERVER_PORT)
+        await ws_send(websocket, "system", f"Connecting to {REVERRUN_SERVER_HOST}:{REVERRUN_SERVER_PORT}...")
 
         welcome = await chat_client.connect_and_login()
         await ws_send(websocket, "connected", welcome, username=username)
-
+        print(chat_client.connected)
         receive_task = asyncio.create_task(forward_from_cpp())
 
         while True:
@@ -178,3 +179,9 @@ async def websocket_chat(websocket: WebSocket):
             receive_task.cancel()
         if chat_client is not None:
             await chat_client.close()
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(app, host="0.0.0.0", port=5000)
