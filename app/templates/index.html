@@ -2,59 +2,66 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Riverrun Client</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#05070b">
+    <title>Riverrun</title>
     <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}">
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', path='favicon.ico') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', path='logo.svg') }}">
   </head>
   <body>
-    <main class="shell">
-      <section class="sidebar alpha" aria-label="Connection panel">
+    <main class="app-shell">
+      <section class="topbar " aria-label="Connection">
         <div class="brand">
-          <span class="brand-mark">RVRN</span>
+          <span class="brand-mark">
+            <img src="{{ url_for('static', path='logo.svg') }}" alt="RVRN">
+          </span>
+          <div class="brand-copy">
+            <h1>Riverrun</h1>
+            <p id="status-text">Disconnected</p>
+          </div>
+        </div>
+        <div id="status-dot" class="status-dot" aria-hidden="true"></div>
+      </section>
+
+      <section id="setup-panel" class="setup-panel glass-panel alpha" aria-label="Server setup">
+        <div class="setup-heading">
           <div>
-            <h1>Riverrun Client</h1>
-            <p>High-performance chat client connected to Riverrun</p>
+            <p class="eyebrow">Live Room</p>
+            <h2>Connect to chat</h2>
           </div>
         </div>
 
         <form id="connect-form" class="connect-form">
           <label>
             Name
-            <input id="username" name="username" maxlength="32" autocomplete="nickname" placeholder="Your name" required autocomplete="off">
+            <input id="username" name="username" maxlength="32" autocomplete="nickname" placeholder="Your name" required>
           </label>
-          <label>
-            Server
-            <input id="host" name="host" value="{{ default_host }}" required>
-          </label>
-          <label>
-            Port
-            <input id="port" name="port" type="number" min="1" max="65535" value="{{ default_port }}" required>
-          </label>
-          <button id="connect-button" type="button">Connect</button>
-          <button id="disconnect-button" type="button" disabled>Disconnect</button>
-        </form>
+          <br>
 
-        <div class="status">
-          <span id="status-dot" class="status-dot"></span>
-          <span id="status-text">Disconnected</span>
-        </div>
+          <div class="actions">
+            <button id="connect-button" class="primary-button" type="submit">Connect</button>
+            <button id="disconnect-button" class="danger-button" type="button" disabled>Disconnect</button>
+          </div>
+        </form>
       </section>
 
-      <section class="chat-panel beta" aria-label="Chat">
+      <section class="chat-panel glass-panel beta" aria-label="Messages">
         <header class="chat-header">
           <div>
-            <p class="eyebrow">Live Room</p>
+            <p class="eyebrow">Room</p>
             <h2 id="room-title">Waiting for connection</h2>
           </div>
+          <button id="clear-button" class="icon-button" type="button" aria-label="Clear messages">Clear</button>
         </header>
-        
-        <div id="messages" class="messages scroll-box" aria-live="polite"></div>
+
+        <div id="messages" class="messages" aria-live="polite"></div>
 
         <form id="message-form" class="message-form">
-          <input id="recipient-input" class="recipient-input" placeholder="DM user (optional)" autocomplete="off" disabled>
-          <input id="message-input" placeholder="Type a message..." autocomplete="off" focus disabled>
-          <button id="send-button" type="submit" disabled>Send</button>
+          <input id="recipient-input" class="recipient-input" placeholder="DM user" autocomplete="off" disabled>
+          <div class="composer-row">
+            <input id="message-input" placeholder="Type a message..." autocomplete="off" disabled>
+            <button id="send-button" class="send-button" type="submit" disabled>Send</button>
+          </div>
         </form>
       </section>
     </main>
