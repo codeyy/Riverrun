@@ -72,12 +72,12 @@ function sendSocket(payload) {
   socket.send(JSON.stringify(payload));
 }
 
-function connectWebSocket({ username, host, port }) {
+function connectWebSocket({ username, bridgeUrl }) {
   const scheme = window.location.protocol === "https:" ? "wss" : "ws";
   socket = new WebSocket(`${scheme}://${window.location.host}/ws`);
 
   socket.addEventListener("open", () => {
-    sendSocket({ type: "connect", username, host, port });
+    sendSocket({ type: "connect", username, bridgeUrl });
   });
 
   socket.addEventListener("message", (event) => {
@@ -115,23 +115,18 @@ function connectWebSocket({ username, host, port }) {
 
 document.getElementById("connect-button").addEventListener("click", () => {
   usernameInput = document.getElementById("username");
-  hostInput = document.getElementById("host");
-  portInput = document.getElementById("port");
+  bridgeUrlInput = document.getElementById("bridge-url");
   alcolour = "rgba(255, 0, 0, 0.76)";
 
   if (usernameInput.value.trim() === "") {
     usernameInput.style.borderColor = alcolour;
   }
-  else if (hostInput.value.trim() === "") {
-    hostInput.style.borderColor = alcolour;
-  }
-  else if (portInput.value.trim() === "") {
-    portInput.style.borderColor = alcolour;
+  else if (bridgeUrlInput.value.trim() === "") {
+    bridgeUrlInput.style.borderColor = alcolour;
   }
   else {
     usernameInput.style.borderColor = "";
-    hostInput.style.borderColor = "";
-    portInput.style.borderColor = "";
+    bridgeUrlInput.style.borderColor = "";
     document.getElementById("connect-button").type = "submit";
   }
 });
@@ -141,17 +136,16 @@ connectForm.addEventListener("submit", (event) => {
   const form = new FormData(connectForm);
 
   const username = form.get("username").trim();
-  const host = form.get("host").trim();
-  const port = form.get("port");
+  const bridgeUrl = form.get("bridgeUrl").trim();
 
   if (socket) {
     socket.close();
   }
-
+  bridgeUrl == "" ? bridgeUrl == "localhost:8000" : bridgeUrl;
   connectButton.disabled = true;
   connectButton.textContent = "Connecting...";
   setStatus("Connecting...", false);
-  connectWebSocket({ username, host, port });
+  connectWebSocket({ username, bridgeUrl });
 });
 
 messageForm.addEventListener("submit", (event) => {
